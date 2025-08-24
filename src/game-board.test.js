@@ -21,13 +21,15 @@ describe("addShip", () => {
     gameBoardOne.addShip(2, [5, 1], "vertical");
     expect(gameBoardOne.board[5][2]).toBe(gameBoardOne.board[3][2]);
   });
-  // test('Try to add ships to coordinates that are outside the range of the board', () => {
-
-  // })
-  // test("Try to add more than maximum number of ships", () => {
-  //   gameBoardOne.addShip(4, [2, 2], "horizontal");
-
-  // });
+  test("Try to add ships to coordinates that are outside the range of the board", () => {
+    gameBoardOne.addShip(4, [2, 7], "vertical");
+    expect(gameBoardOne.board[2][9]).toBe("empty");
+  });
+  test("Try to add more than maximum number of ships", () => {
+    gameBoardOne.addShip(4, [2, 2], "horizontal");
+    gameBoardOne.addShip(4, [3, 4], "horizontal");
+    expect(gameBoardOne.board[3][4]).toBe('empty');
+  });
 });
 
 describe("receiveAttack", () => {
