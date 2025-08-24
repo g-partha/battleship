@@ -16,7 +16,7 @@ export class GameBoard {
   numberOfShipsLengthThree = 0;
   numberOfShipsLengthTwo = 0;
   shipsAdded = [];
-  validCoordinatesForPlacement(length, startCoordinate, direction) {
+  validInputForShipPlacement(length, startCoordinate, direction) {
     const validLength = [2, 3, 4, 5];
     if(!validLength.includes(length)) return false;
     if (
@@ -61,7 +61,7 @@ export class GameBoard {
   }
   addShip(length, startCoordinate, direction) {
     if (
-      this.validCoordinatesForPlacement(length, startCoordinate, direction) ===
+      this.validInputForShipPlacement(length, startCoordinate, direction) ===
       false
     )
       return -1;
