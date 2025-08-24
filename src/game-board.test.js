@@ -28,7 +28,7 @@ describe("addShip", () => {
   test("Try to add more than maximum number of ships", () => {
     gameBoardOne.addShip(4, [2, 2], "horizontal");
     gameBoardOne.addShip(4, [3, 4], "horizontal");
-    expect(gameBoardOne.board[3][4]).toBe('empty');
+    expect(gameBoardOne.board[3][4]).toBe("empty");
   });
 });
 
@@ -37,7 +37,9 @@ describe("receiveAttack", () => {
     gameBoardOne.receiveAttack(1, 3);
     expect(gameBoardOne.board[1][3]).toBe("miss");
   });
-  // test('Hit attack', () => {
-
-  // });
+  test('Hit attack', () => {
+    gameBoardOne.addShip(4, [2, 2], "horizontal");
+    gameBoardOne.receiveAttack(2,2);
+    expect(gameBoardOne.board[2][2].isHit).toBe(true);
+  });
 });

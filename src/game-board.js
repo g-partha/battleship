@@ -15,6 +15,7 @@ export class GameBoard {
   numberOfShipsLengthFour = 0;
   numberOfShipsLengthThree = 0;
   numberOfShipsLengthTwo = 0;
+  shipsAdded = [];
   validCoordinatesForPlacement(length, startCoordinate, direction) {
     if (
       this.numberOfShipsLengthFive >= 1 ||
@@ -27,7 +28,7 @@ export class GameBoard {
     let y = startCoordinate[1];
     if (direction === "horizontal") {
       for (let i = 0; i < length; i++) {
-        if (x < 0 || x > 9 || y < 0 || y > 9) return false; // Check for invalid coordinates
+        if (x < 0 || x > 9 || y < 0 || y > 9) return false; // Check for out of range coordinates
         if (this.board[x][y] !== "empty") return false; // Check for operlapping ships
         x++;
       }
@@ -61,10 +62,11 @@ export class GameBoard {
       this.validCoordinatesForPlacement(length, startCoordinate, direction) ===
       false
     )
-      return;
+      return -1;
     let x = startCoordinate[0];
     let y = startCoordinate[1];
-    this.board[x][y] = new Ship(length);
+    this.board[x][y] = { isHit: false, shipObject: new Ship(length) };
+    this.shipsAdded.push(this.board[x][y]);
     if (direction === "horizontal") {
       for (let i = 0; i < length - 1; i++) {
         this.board[x + 1][y] = this.board[x][y];
@@ -76,12 +78,16 @@ export class GameBoard {
         y++;
       }
     }
+    return 1;
   }
   receiveAttack(x, y) {
-    if (this.board[x][y] === "empty") {
-      this.board[x][y] = "miss";
+    if (typeof this.board[x][y] === "object") {
+      if (this.board[x][y].isHit === true) return -1;
+      this.board[x][y].isHit = true;
+      return 1;
     }
-    // if (typeof this.board[x][y] === "object") {
-    // }
+    if (this.board[x][y] === "miss") return -1;
+    this.board[x][y] = "miss";
+    return 0;
   }
 }
