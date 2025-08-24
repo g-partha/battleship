@@ -11,6 +11,10 @@ describe("addShip", () => {
     expect(gameBoardOne.board[3][3]).toBe(gameBoardOne.board[2][3]);
     expect(gameBoardOne.board[4][3]).toBe(gameBoardOne.board[2][3]);
   });
+  test('Check for invalid length', () => {
+    gameBoardOne.addShip(1, [2, 3], 'horizontal');
+    expect(gameBoardOne.board[2][3]).toBe('empty');
+  })
   test("Try to overlap ships V1", () => {
     gameBoardOne.addShip(4, [3, 2], "horizontal");
     gameBoardOne.addShip(2, [3, 2], "vertical");

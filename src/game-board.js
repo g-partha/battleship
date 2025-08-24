@@ -17,6 +17,8 @@ export class GameBoard {
   numberOfShipsLengthTwo = 0;
   shipsAdded = [];
   validCoordinatesForPlacement(length, startCoordinate, direction) {
+    const validLength = [2, 3, 4, 5];
+    if(!validLength.includes(length)) return false;
     if (
       this.numberOfShipsLengthFive >= 1 ||
       this.numberOfShipsLengthFour >= 1 ||
