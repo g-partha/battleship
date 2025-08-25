@@ -16,34 +16,65 @@ export class GameBoard {
   numberOfShipsLengthThree = 0;
   numberOfShipsLengthTwo = 0;
   shipsAdded = [];
-  validInputForShipPlacement(length, startCoordinate, direction) {
+  validInputForShipPlacement(
+    lengthValue,
+    startCoordinateValue,
+    directionValue
+  ) {
     const validLength = [2, 3, 4, 5];
-    if(!validLength.includes(length)) return false;
-    if (
-      this.numberOfShipsLengthFive >= 1 ||
-      this.numberOfShipsLengthFour >= 1 ||
-      this.numberOfShipsLengthThree >= 2 ||
-      this.numberOfShipsLengthTwo >= 1
-    )
-      return false;
-    let x = startCoordinate[0];
-    let y = startCoordinate[1];
-    if (direction === "horizontal") {
-      for (let i = 0; i < length; i++) {
-        if (x < 0 || x > 9 || y < 0 || y > 9) return false; // Check for out of range coordinates
+    if (!validLength.includes(lengthValue)) return false;
+    switch (lengthValue) {
+      case 5:
+        if (this.numberOfShipsLengthFive >= 1) return false;
+        break;
+      case 4:
+        if (this.numberOfShipsLengthFour >= 1) return false;
+        break;
+      case 3:
+        if (this.numberOfShipsLengthThree >= 2) return false;
+        break;
+      case 2:
+        if (this.numberOfShipsLengthTwo >= 1) return false;
+        break;
+    }
+
+    let x = startCoordinateValue[0];
+    let y = startCoordinateValue[1];
+    if (x < 0 || x > 9 || y < 0 || y > 9) return false; // Check for out of range coordinates
+    if (directionValue === "horizontal") {
+      for (let i = 0; i < lengthValue; i++) {
         if (this.board[x][y] !== "empty") return false; // Check for operlapping ships
         x++;
       }
     }
-    if (direction === "vertical") {
-      for (let i = 0; i < length; i++) {
-        if (x < 0 || x > 9 || y < 0 || y > 9) return false;
+    if (directionValue === "vertical") {
+      for (let i = 0; i < lengthValue; i++) {
         if (this.board[x][y] !== "empty") return false;
         y++;
       }
     }
-    // The following increments are added last because these increments
-    // will happen only if the coordinates are valid
+  }
+  addShip(length, startCoordinate, direction) {
+    if (
+      this.validInputForShipPlacement(length, startCoordinate, direction) ===
+      false
+    )
+      return -1;
+    let x = startCoordinate[0];
+    let y = startCoordinate[1];
+    const ship = new Ship(length);
+    this.shipsAdded.push(ship);
+    if (direction === "horizontal") {
+      for (let i = 0; i < length; i++) {
+        this.board[x][y] = { isHit: false, shipObject: ship };
+        x++;
+      }
+    } else if (direction === "vertical") {
+      for (let i = 0; i < length; i++) {
+        this.board[x][y] = { isHit: false, shipObject: ship };
+        y++;
+      }
+    }
     switch (length) {
       case 5:
         this.numberOfShipsLengthFive++;
@@ -58,38 +89,23 @@ export class GameBoard {
         this.numberOfShipsLengthTwo++;
         break;
     }
-  }
-  addShip(length, startCoordinate, direction) {
-    if (
-      this.validInputForShipPlacement(length, startCoordinate, direction) ===
-      false
-    )
-      return -1;
-    let x = startCoordinate[0];
-    let y = startCoordinate[1];
-    this.board[x][y] = { isHit: false, shipObject: new Ship(length) };
-    this.shipsAdded.push(this.board[x][y]);
-    if (direction === "horizontal") {
-      for (let i = 0; i < length - 1; i++) {
-        this.board[x + 1][y] = this.board[x][y];
-        x++;
-      }
-    } else if (direction === "vertical") {
-      for (let i = 0; i < length - 1; i++) {
-        this.board[x][y + 1] = this.board[x][y];
-        y++;
-      }
-    }
     return 1;
   }
   receiveAttack(x, y) {
     if (typeof this.board[x][y] === "object") {
       if (this.board[x][y].isHit === true) return -1;
+      this.board[x][y].shipObject.hit();
       this.board[x][y].isHit = true;
       return 1;
     }
     if (this.board[x][y] === "miss") return -1;
     this.board[x][y] = "miss";
     return 0;
+  }
+  allShipsSunk() {
+    for (let i = 0; i < this.shipsAdded.length; i++) {
+      if (this.shipsAdded[i].isSunk() === false) return false;
+    }
+    return true;
   }
 }
