@@ -40,15 +40,16 @@ export class GameBoard {
 
     let x = startCoordinateValue[0];
     let y = startCoordinateValue[1];
-    if (x < 0 || x > 9 || y < 0 || y > 9) return false; // Check for out of range coordinates
     if (directionValue === "horizontal") {
       for (let i = 0; i < lengthValue; i++) {
+        if (x < 0 || x > 9 || y < 0 || y > 9) return false; // Check for out of range coordinates
         if (this.board[x][y] !== "empty") return false; // Check for operlapping ships
         x++;
       }
     }
     if (directionValue === "vertical") {
       for (let i = 0; i < lengthValue; i++) {
+        if (x < 0 || x > 9 || y < 0 || y > 9) return false; // Check for out of range coordinates
         if (this.board[x][y] !== "empty") return false;
         y++;
       }
