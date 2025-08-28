@@ -8,8 +8,12 @@ describe("addShip", () => {
   test("Add one ship", () => {
     gameBoardOne.addShip(3, [2, 3], "horizontal");
     expect(typeof gameBoardOne.board[2][3]).toBe("object");
-    expect(gameBoardOne.board[3][3].shipObject).toBe(gameBoardOne.board[2][3].shipObject);
-    expect(gameBoardOne.board[4][3].shipObject).toBe(gameBoardOne.board[2][3].shipObject);
+    expect(gameBoardOne.board[3][3].shipObject).toBe(
+      gameBoardOne.board[2][3].shipObject
+    );
+    expect(gameBoardOne.board[4][3].shipObject).toBe(
+      gameBoardOne.board[2][3].shipObject
+    );
   });
   test("Check for invalid length", () => {
     gameBoardOne.addShip(1, [2, 3], "horizontal");
@@ -18,12 +22,16 @@ describe("addShip", () => {
   test("Try to overlap ships V1", () => {
     gameBoardOne.addShip(4, [3, 2], "horizontal");
     gameBoardOne.addShip(2, [3, 2], "vertical");
-    expect(gameBoardOne.board[3][2].shipObject).toBe(gameBoardOne.board[4][2].shipObject);
+    expect(gameBoardOne.board[3][2].shipObject).toBe(
+      gameBoardOne.board[4][2].shipObject
+    );
   });
   test("Try to overlap ships V2", () => {
     gameBoardOne.addShip(4, [3, 2], "horizontal");
     gameBoardOne.addShip(2, [5, 1], "vertical");
-    expect(gameBoardOne.board[5][2].shipObject).toBe(gameBoardOne.board[3][2].shipObject);
+    expect(gameBoardOne.board[5][2].shipObject).toBe(
+      gameBoardOne.board[3][2].shipObject
+    );
   });
   test("Try to add ships to coordinates that are outside the range of the board", () => {
     gameBoardOne.addShip(4, [2, 7], "vertical");
@@ -72,7 +80,7 @@ describe("allShipsSunk", () => {
     }
     expect(gameBoardOne.allShipsSunk()).toBe(true);
   });
-    test("Only one ship is sunk", () => {
+  test("Only one ship is sunk", () => {
     gameBoardOne.addShip(5, [0, 0], "horizontal");
     gameBoardOne.addShip(4, [0, 1], "horizontal");
     gameBoardOne.addShip(3, [0, 2], "horizontal");
@@ -82,5 +90,12 @@ describe("allShipsSunk", () => {
       gameBoardOne.receiveAttack(i, 0);
     }
     expect(gameBoardOne.allShipsSunk()).toBe(false);
+  });
+});
+
+describe("populateBoard", () => {
+  test("populateBoard", () => {
+    gameBoardOne.populateBoard();
+    expect(gameBoardOne.shipsAdded.length).toBe(5);
   });
 });

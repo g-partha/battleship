@@ -54,6 +54,7 @@ export class GameBoard {
         y++;
       }
     }
+    return true;
   }
   addShip(length, startCoordinate, direction) {
     if (
@@ -108,5 +109,40 @@ export class GameBoard {
       if (this.shipsAdded[i].isSunk() === false) return false;
     }
     return true;
+  }
+  validRandomCoordinateforPlacement(length, direction) {
+    let count = 0;
+    const coordinateValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    while (count < 1000) {
+      const randomXCoordinate =
+        coordinateValues[Math.floor(Math.random() * coordinateValues.length)];
+      const randomYCoordinate =
+        coordinateValues[Math.floor(Math.random() * coordinateValues.length)];
+      if (
+        this.validInputForShipPlacement(
+          length,
+          [randomXCoordinate, randomYCoordinate],
+          direction
+        ) === true
+      ) {
+        return [randomXCoordinate, randomYCoordinate];
+      }
+      count++;
+    }
+  }
+  randomDirection() {
+    const directions = ["horizontal", "vertical"];
+    return directions[Math.floor(Math.random() * directions.length)];
+  }
+  populateBoard() {
+    let lengths = [5, 4, 3, 3, 2];
+    for (let i = 0; i < lengths.length; i++) {
+      let randomDirection = this.randomDirection();
+      let randomCoordinates = this.validRandomCoordinateforPlacement(
+        lengths[i],
+        randomDirection
+      );
+      this.addShip(lengths[i], randomCoordinates, randomDirection);
+    }
   }
 }
