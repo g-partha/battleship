@@ -93,9 +93,51 @@ describe("allShipsSunk", () => {
   });
 });
 
-describe("populateBoard", () => {
-  test("populateBoard", () => {
+test("populateBoard", () => {
+  gameBoardOne.populateBoard();
+  expect(gameBoardOne.shipsAdded.length).toBe(5);
+});
+
+describe("validRandomCoordinateforAttack", () => {
+  test("All ships are attacked", () => {
     gameBoardOne.populateBoard();
-    expect(gameBoardOne.shipsAdded.length).toBe(5);
+    for (let i = 0; i <= 9; i++) {
+      for (let j = 0; j <= 9; j++) {
+        // attack all columns now
+        gameBoardOne.receiveAttack(i, j);
+      }
+    }
+    const randomCoordinate = gameBoardOne.validRandomCoordinateforAttack();
+    // After attacking every cell, this function should return undefined (no valid attack left)
+    expect(randomCoordinate).toBeUndefined(); // You might want to handle this case explicitly in your method
+  });
+
+  test("Some ships are attacked", () => {
+    gameBoardOne.populateBoard();
+    for (let i = 0; i <= 9; i++) {
+      for (let j = 0; j <= 8; j++) {
+        gameBoardOne.receiveAttack(i, j);
+      }
+    }
+    const randomCoordinate = gameBoardOne.validRandomCoordinateforAttack();
+    const x = randomCoordinate[0];
+    const y = randomCoordinate[1];
+    if (typeof gameBoardOne.board[x][y] === "object") {
+      expect(gameBoardOne.board[x][y].isHit).toBe(false);
+    } else {
+      expect(gameBoardOne.board[x][y]).not.toBe("miss");
+    }
+  });
+});
+
+describe("autoAttack", () => {
+  test("All ships are attacked", () => {
+    gameBoardOne.populateBoard();
+    for (let i = 0; i <= 99; i++) {
+      gameBoardOne.autoAttack();
+    }
+    const randomCoordinate = gameBoardOne.validRandomCoordinateforAttack();
+    // After attacking every cell, this function should return undefined (no valid attack left)
+    expect(randomCoordinate).toBeUndefined(); // You might want to handle this case explicitly in your method
   });
 });

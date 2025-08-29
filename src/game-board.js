@@ -145,4 +145,31 @@ export class GameBoard {
       this.addShip(lengths[i], randomCoordinates, randomDirection);
     }
   }
+  validRandomCoordinateforAttack() {
+    let count = 0;
+    const coordinateValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    while (count < 1000) {
+      const randomXCoordinate =
+        coordinateValues[Math.floor(Math.random() * coordinateValues.length)];
+      const randomYCoordinate =
+        coordinateValues[Math.floor(Math.random() * coordinateValues.length)];
+      if (
+        typeof this.board[randomXCoordinate][randomYCoordinate] === "object"
+      ) {
+        if (this.board[randomXCoordinate][randomYCoordinate].isHit === false) {
+          return [randomXCoordinate, randomYCoordinate];
+        }
+      } else {
+        if (this.board[randomXCoordinate][randomYCoordinate] !== "miss") {
+          return [randomXCoordinate, randomYCoordinate];
+        }
+      }
+      count++;
+    }
+  }
+  autoAttack() {
+    const randomCoordinates = this.validRandomCoordinateforAttack();
+    if (randomCoordinates === undefined) return;
+    this.receiveAttack(randomCoordinates[0], randomCoordinates[1]);
+  }
 }
