@@ -51,14 +51,16 @@ export class GameBoard {
     let y = startCoordinateValue[1];
     if (directionValue === "horizontal") {
       for (let i = 0; i < lengthValue; i++) {
-        if (x < 0 || x > 9 || y < 0 || y > 9) return false; // Check for out of range coordinates
+        if (x < 0 || x > this.size - 1 || y < 0 || y > this.size - 1)
+          return false; // Check for out of range coordinates
         if (this.board[x][y] !== "empty") return false; // Check for operlapping ships
         x++;
       }
     }
     if (directionValue === "vertical") {
       for (let i = 0; i < lengthValue; i++) {
-        if (x < 0 || x > 9 || y < 0 || y > 9) return false; // Check for out of range coordinates
+        if (x < 0 || x > this.size - 1 || y < 0 || y > this.size - 1)
+          return false; // Check for out of range coordinates
         if (this.board[x][y] !== "empty") return false;
         y++;
       }
@@ -121,12 +123,9 @@ export class GameBoard {
   }
   validRandomCoordinateforPlacement(length, direction) {
     let count = 0;
-    const coordinateValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     while (count < 1000) {
-      const randomXCoordinate =
-        coordinateValues[Math.floor(Math.random() * coordinateValues.length)];
-      const randomYCoordinate =
-        coordinateValues[Math.floor(Math.random() * coordinateValues.length)];
+      const randomXCoordinate = this.randomIntegerLessThan(this.size);
+      const randomYCoordinate = this.randomIntegerLessThan(this.size);
       if (
         this.validInputForShipPlacement(
           length,
@@ -154,14 +153,14 @@ export class GameBoard {
       this.addShip(lengths[i], randomCoordinates, randomDirection);
     }
   }
+  randomIntegerLessThan(limitigInteger) {
+    return Math.floor(limitigInteger * Math.random());
+  }
   validRandomCoordinateforAttack() {
     let count = 0;
-    const coordinateValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     while (count < 1000) {
-      const randomXCoordinate =
-        coordinateValues[Math.floor(Math.random() * coordinateValues.length)];
-      const randomYCoordinate =
-        coordinateValues[Math.floor(Math.random() * coordinateValues.length)];
+      const randomXCoordinate = this.randomIntegerLessThan(this.size);
+      const randomYCoordinate = this.randomIntegerLessThan(this.size);
       if (
         typeof this.board[randomXCoordinate][randomYCoordinate] === "object"
       ) {

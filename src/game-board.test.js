@@ -141,3 +141,11 @@ describe("autoAttack", () => {
     expect(randomCoordinate).toBeUndefined(); // You might want to handle this case explicitly in your method
   });
 });
+
+describe('randomIntegerLessThan', () => {
+  test('simple test', () => {
+    const randomInt = gameBoardOne.randomIntegerLessThan(10);
+    console.log(randomInt);
+    expect(randomInt).toBeLessThan(10);
+  })
+})
