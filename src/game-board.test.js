@@ -17,7 +17,7 @@ describe("addShip", () => {
   });
   test("Check for invalid length", () => {
     gameBoardOne.addShip(1, [2, 3], "horizontal");
-    expect(gameBoardOne.board[2][3]).toBe("empty");
+    expect(gameBoardOne.board[2][3].shipObject).toBe(null);
   });
   test("Try to overlap ships V1", () => {
     gameBoardOne.addShip(4, [3, 2], "horizontal");
@@ -35,19 +35,20 @@ describe("addShip", () => {
   });
   test("Try to add ships to coordinates that are outside the range of the board", () => {
     gameBoardOne.addShip(4, [2, 7], "vertical");
-    expect(gameBoardOne.board[2][9]).toBe("empty");
+    expect(gameBoardOne.board[2][9].shipObject).toBe(null);
   });
   test("Try to add more than maximum number of ships", () => {
     gameBoardOne.addShip(4, [2, 2], "horizontal");
     gameBoardOne.addShip(4, [3, 4], "horizontal");
-    expect(gameBoardOne.board[3][4]).toBe("empty");
+    expect(gameBoardOne.board[3][4].shipObject).toBe(null);
   });
 });
 
 describe("receiveAttack", () => {
   test("Missed attack", () => {
     gameBoardOne.receiveAttack(1, 3);
-    expect(gameBoardOne.board[1][3]).toBe("miss");
+    expect(gameBoardOne.board[1][3].shipObject).toBe(null);
+    expect(gameBoardOne.board[1][3].isHit).toBe(true);
   });
   test("Hit attack", () => {
     gameBoardOne.addShip(4, [2, 2], "horizontal");
