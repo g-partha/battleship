@@ -25,6 +25,21 @@ export class GameBoard {
       }
     }
   }
+  getCell(x, y){
+    return this.board[x][y];
+  }
+  getShipObject(x, y){
+    return this.getCell(x, y).shipObject;
+  }
+  setShitObject(x, y, value){
+    this.getCell(x, y).shipObject = value;
+  }
+  checkHitStatus(x, y){
+    return this.getCell(x, y).isHit;
+  }
+  setHitStatusAsTrue(x, y){
+    this.getCell(x, y).isHit = true;
+  }
   validInputForShipPlacement(
     lengthValue,
     startCoordinateValue,
@@ -52,7 +67,7 @@ export class GameBoard {
       for (let i = 0; i < lengthValue; i++) {
         if (x < 0 || x > this.size - 1 || y < 0 || y > this.size - 1)
           return false; // Check for out of range coordinates
-        if (this.board[x][y].shipObject !== null) return false; // Check for operlapping ships
+        if (this.getShipObject(x, y) !== null) return false; // Check for operlapping ships
         x++;
       }
     }
@@ -60,7 +75,7 @@ export class GameBoard {
       for (let i = 0; i < lengthValue; i++) {
         if (x < 0 || x > this.size - 1 || y < 0 || y > this.size - 1)
           return false; // Check for out of range coordinates
-        if (this.board[x][y].shipObject !== null) return false;
+        if (this.getShipObject(x, y) !== null) return false;
         y++;
       }
     }
@@ -78,12 +93,12 @@ export class GameBoard {
     this.shipsAdded.push(ship);
     if (direction === "horizontal") {
       for (let i = 0; i < length; i++) {
-        this.board[x][y].shipObject = ship;
+        this.setShitObject(x, y, ship);
         x++;
       }
     } else if (direction === "vertical") {
       for (let i = 0; i < length; i++) {
-        this.board[x][y].shipObject = ship;
+        this.setShitObject(x, y, ship);
         y++;
       }
     }
@@ -104,13 +119,13 @@ export class GameBoard {
     return 1;
   }
   receiveAttack(x, y) {
-    if (this.board[x][y].isHit === true) return -1;
-    if (this.board[x][y].shipObject === null) {
-      this.board[x][y].isHit = true;
+    if (this.checkHitStatus(x, y) === true) return -1;
+    if (this.getShipObject(x, y) === null) {
+      this.setHitStatusAsTrue(x, y);
       return 1;
     } else {
-      this.board[x][y].isHit = true;
-      this.board[x][y].shipObject.hit();
+      this.setHitStatusAsTrue(x, y);
+      this.getShipObject(x, y).hit();
       return 1;
     }
   }
@@ -154,7 +169,7 @@ export class GameBoard {
     while (count < 1000) {
       const x = this.randomIntegerLessThan(this.size);
       const y = this.randomIntegerLessThan(this.size);
-      if (this.board[x][y].isHit === false) return [x, y];
+      if (this.checkHitStatus(x, y) === false) return [x, y];
       count++;
     }
   }

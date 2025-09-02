@@ -7,53 +7,53 @@ beforeEach(() => {
 describe("addShip", () => {
   test("Add one ship", () => {
     gameBoardOne.addShip(3, [2, 3], "horizontal");
-    expect(typeof gameBoardOne.board[2][3]).toBe("object");
-    expect(gameBoardOne.board[3][3].shipObject).toBe(
-      gameBoardOne.board[2][3].shipObject
+    expect(typeof gameBoardOne.getCell(2, 3)).toBe("object");
+    expect(gameBoardOne.getShipObject(3, 3)).toBe(
+      gameBoardOne.getShipObject(2, 3)
     );
-    expect(gameBoardOne.board[4][3].shipObject).toBe(
-      gameBoardOne.board[2][3].shipObject
+    expect(gameBoardOne.getShipObject(4, 3)).toBe(
+      gameBoardOne.getShipObject(2, 3)
     );
   });
   test("Check for invalid length", () => {
     gameBoardOne.addShip(1, [2, 3], "horizontal");
-    expect(gameBoardOne.board[2][3].shipObject).toBe(null);
+    expect(gameBoardOne.getShipObject(2, 3)).toBe(null);
   });
   test("Try to overlap ships V1", () => {
     gameBoardOne.addShip(4, [3, 2], "horizontal");
     gameBoardOne.addShip(2, [3, 2], "vertical");
-    expect(gameBoardOne.board[3][2].shipObject).toBe(
-      gameBoardOne.board[4][2].shipObject
+    expect(gameBoardOne.getShipObject(3, 2)).toBe(
+      gameBoardOne.getShipObject(4, 2)
     );
   });
   test("Try to overlap ships V2", () => {
     gameBoardOne.addShip(4, [3, 2], "horizontal");
     gameBoardOne.addShip(2, [5, 1], "vertical");
-    expect(gameBoardOne.board[5][2].shipObject).toBe(
-      gameBoardOne.board[3][2].shipObject
+    expect(gameBoardOne.getShipObject(5, 2)).toBe(
+      gameBoardOne.getShipObject(3, 2)
     );
   });
   test("Try to add ships to coordinates that are outside the range of the board", () => {
     gameBoardOne.addShip(4, [2, 7], "vertical");
-    expect(gameBoardOne.board[2][9].shipObject).toBe(null);
+    expect(gameBoardOne.getShipObject(2, 9)).toBe(null);
   });
   test("Try to add more than maximum number of ships", () => {
     gameBoardOne.addShip(4, [2, 2], "horizontal");
     gameBoardOne.addShip(4, [3, 4], "horizontal");
-    expect(gameBoardOne.board[3][4].shipObject).toBe(null);
+    expect(gameBoardOne.getShipObject(3, 4)).toBe(null);
   });
 });
 
 describe("receiveAttack", () => {
   test("Missed attack", () => {
     gameBoardOne.receiveAttack(1, 3);
-    expect(gameBoardOne.board[1][3].shipObject).toBe(null);
-    expect(gameBoardOne.board[1][3].isHit).toBe(true);
+    expect(gameBoardOne.getShipObject(1, 3)).toBe(null);
+    expect(gameBoardOne.checkHitStatus(1, 3)).toBe(true);
   });
   test("Hit attack", () => {
     gameBoardOne.addShip(4, [2, 2], "horizontal");
     gameBoardOne.receiveAttack(2, 2);
-    expect(gameBoardOne.board[2][2].isHit).toBe(true);
+    expect(gameBoardOne.checkHitStatus(2, 2)).toBe(true);
   });
 });
 
@@ -123,10 +123,10 @@ describe("validRandomCoordinateforAttack", () => {
     const randomCoordinate = gameBoardOne.validRandomCoordinateforAttack();
     const x = randomCoordinate[0];
     const y = randomCoordinate[1];
-    if (typeof gameBoardOne.board[x][y] === "object") {
-      expect(gameBoardOne.board[x][y].isHit).toBe(false);
+    if (typeof gameBoardOne.getCell(x, y) === "object") {
+      expect(gameBoardOne.checkHitStatus(x, y)).toBe(false);
     } else {
-      expect(gameBoardOne.board[x][y]).not.toBe("miss");
+      expect(gameBoardOne.getCell(x, y)).not.toBe("miss");
     }
   });
 });
@@ -143,10 +143,10 @@ describe("autoAttack", () => {
   });
 });
 
-describe('randomIntegerLessThan', () => {
-  test('simple test', () => {
+describe("randomIntegerLessThan", () => {
+  test("simple test", () => {
     const randomInt = gameBoardOne.randomIntegerLessThan(10);
     console.log(randomInt);
     expect(randomInt).toBeLessThan(10);
-  })
-})
+  });
+});
