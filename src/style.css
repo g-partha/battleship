@@ -42,8 +42,7 @@ div.board-containers {
 div.boards {
   display: grid;
   gap: 5px;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(10, auto);
+  grid-template-columns: repeat(10, auto);
 }
 div.board-cells{
   width: 30px;

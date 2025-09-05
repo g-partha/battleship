@@ -32,23 +32,32 @@ export class Game {
     console.log(this.currentPlayer.playerName + " 's turn!");
     return 1;
   }
-  attack(player, coordinates) {
-    if (player !== this.currentPlayer) return -1;
-    if (player.playerName === "Computer") {
-      player.opponent.gameBoard.autoAttack();
+  playerOneAttack(x, y) {
+    if (
+      this.currentPlayer !== this.playerOne ||
+      this.playerOne.gameBoard.checkHitStatus(x, y) === true
+    )
+      return -1;
+    this.playerOne.opponent.receiveAttack(x, y);
+    this.currentPlayer = this.playerOne.opponent;
+    if (this.playerOne.opponent.gameBoard.allShipsSunk() === true) {
+      console.log(this.playerOne.playerName + "wins!");
+    }
+  }
+  playerTwoAttack(x, y) {
+    if (
+      this.currentPlayer !== this.playerTwo ||
+      this.playerTwo.gameBoard.checkHitStatus(x, y) === true
+    )
+      return -1;
+    if(this.gameMode === '1-Player'){
+      this.playerTwo.opponent.gameBoard.autoAttack();
+      this.currentPlayer = this.playerTwo.opponent();
+      return 1;
     } else {
-      player.opponent.gameBoard.receiveAttack(coordinates);
+      this.playerTwo.opponent.receiveAttack(x, y);
+      this.currentPlayer = this.playerTwo.opponent;
+      return 2;
     }
-    this.currentPlayer = player.opponent;
-    if (player.opponent.gameBoard.allShipsSunk() === true) {
-      console.log(player.playerName + "wins!");
-    }
-    return 1;
-  }
-  playerOneAttack(coordinates){
-    this.attack(this.playerOne, coordinates);
-  }
-  playerTwoAttack(coordinates){
-    this.attack(this.playerTwo, coordinates);
   }
 }
