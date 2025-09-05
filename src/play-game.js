@@ -38,7 +38,7 @@ export class Game {
       this.playerOne.opponent.gameBoard.checkHitStatus(x, y) === true
     )
       return -1;
-    this.playerOne.opponent.receiveAttack(x, y);
+    this.playerOne.opponent.gameBoard.receiveAttack(x, y);
     this.currentPlayer = this.playerOne.opponent;
     if (this.playerOne.opponent.gameBoard.allShipsSunk() === true) {
       console.log(this.playerOne.playerName + "wins!");

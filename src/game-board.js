@@ -24,20 +24,25 @@ export class GameBoard {
         this.board[i].push({ isHit: false, shipObject: null });
       }
     }
+    numberOfShipsLengthFive = 0;
+    numberOfShipsLengthFour = 0;
+    numberOfShipsLengthThree = 0;
+    numberOfShipsLengthTwo = 0;
+    shipsAdded = [];
   }
-  getCell(x, y){
+  getCell(x, y) {
     return this.board[x][y];
   }
-  getShipObject(x, y){
+  getShipObject(x, y) {
     return this.board[x][y].shipObject;
   }
-  setShipObject(x, y, value){
+  setShipObject(x, y, value) {
     this.board[x][y].shipObject = value;
   }
-  checkHitStatus(x, y){
+  checkHitStatus(x, y) {
     return this.board[x][y].isHit;
   }
-  setHitStatusAsTrue(x, y){
+  setHitStatusAsTrue(x, y) {
     this.board[x][y].isHit = true;
   }
   validInputForShipPlacement(
