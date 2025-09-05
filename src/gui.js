@@ -30,13 +30,6 @@ export class GUI {
           coordinates: [i, j],
           node: cell,
         });
-        cell.addEventListener("click", () => {
-          this.game.playerOneAttack(i, j);
-          if (this.game.gameMode === "1-Player") {
-            this.game.playerTwoAttack();
-          }
-          this.updateBoards();
-        });
       }
     }
   }
@@ -50,7 +43,10 @@ export class GUI {
           node: cell,
         });
         cell.addEventListener("click", () => {
-          this.game.playerTwoAttack(i, j);
+          this.game.playerOneAttack(i, j);
+          if (this.game.gameMode === "1-Player") {
+            this.game.playerTwoAttack();
+          }
           this.updateBoards();
         });
       }

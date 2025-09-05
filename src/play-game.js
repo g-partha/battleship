@@ -35,7 +35,7 @@ export class Game {
   playerOneAttack(x, y) {
     if (
       this.currentPlayer !== this.playerOne ||
-      this.playerOne.gameBoard.checkHitStatus(x, y) === true
+      this.playerOne.opponent.gameBoard.checkHitStatus(x, y) === true
     )
       return -1;
     this.playerOne.opponent.receiveAttack(x, y);
@@ -47,15 +47,15 @@ export class Game {
   playerTwoAttack(x, y) {
     if (
       this.currentPlayer !== this.playerTwo ||
-      this.playerTwo.gameBoard.checkHitStatus(x, y) === true
+      this.playerTwo.opponent.gameBoard.checkHitStatus(x, y) === true
     )
       return -1;
     if(this.gameMode === '1-Player'){
       this.playerTwo.opponent.gameBoard.autoAttack();
-      this.currentPlayer = this.playerTwo.opponent();
+      this.currentPlayer = this.playerTwo.opponent;
       return 1;
     } else {
-      this.playerTwo.opponent.receiveAttack(x, y);
+      this.playerTwo.opponent.gameBoard.receiveAttack(x, y);
       this.currentPlayer = this.playerTwo.opponent;
       return 2;
     }
