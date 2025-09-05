@@ -42,4 +42,17 @@ div.board-containers {
 div.boards {
   display: grid;
   gap: 5px;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(10, auto);
+}
+div.board-cells{
+  width: 30px;
+  height: 30px;
+  background-color: grey;
+}
+div.board-cells-miss{
+  background-color: red;
+}
+div.board-cells-hit{
+background-color: green;
 }

@@ -29,16 +29,16 @@ export class GameBoard {
     return this.board[x][y];
   }
   getShipObject(x, y){
-    return this.getCell(x, y).shipObject;
+    return this.board[x][y].shipObject;
   }
-  setShitObject(x, y, value){
-    this.getCell(x, y).shipObject = value;
+  setShipObject(x, y, value){
+    this.board[x][y].shipObject = value;
   }
   checkHitStatus(x, y){
-    return this.getCell(x, y).isHit;
+    return this.board[x][y].isHit;
   }
   setHitStatusAsTrue(x, y){
-    this.getCell(x, y).isHit = true;
+    this.board[x][y].isHit = true;
   }
   validInputForShipPlacement(
     lengthValue,
@@ -93,12 +93,12 @@ export class GameBoard {
     this.shipsAdded.push(ship);
     if (direction === "horizontal") {
       for (let i = 0; i < length; i++) {
-        this.setShitObject(x, y, ship);
+        this.setShipObject(x, y, ship);
         x++;
       }
     } else if (direction === "vertical") {
       for (let i = 0; i < length; i++) {
-        this.setShitObject(x, y, ship);
+        this.setShipObject(x, y, ship);
         y++;
       }
     }

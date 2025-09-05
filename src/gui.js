@@ -1,59 +1,87 @@
-import {
-  playerOne,
-  computerPlayer,
-  currentPlayer,
-  startGame,
-  playerOneAttack,
-  computerPlayerAttack,
-} from "./play-game.js";
+import { Game } from "./play-game.js";
 
-const startRestartButton = document.querySelector("button#start-restart-game");
-const infoDisplay = document.querySelector("div#info-display");
-const boardOne = document.querySelector("div#board-one");
-const boardTwo = document.querySelector("div#board-two");
-
-startRestartButton.addEventListener("click", (event) => {
-  event.preventDefault();
-  startGame();
-  updateBoard(playerOne, boardOne);
-  updateBoard(computerPlayer, boardTwo);
-});
-
-function updateBoard(player, guiBoard) {
-  for (let i = 0; i < player.gameBoard.board.length; i++) {
-    for (let j = 0; j < player.gameBoard.board[i].length; j++) {
-      const cell = document.createElement("div");
-      cell.classList.add("board-cells");
-      cell.addEventListener("click", () => {
-        if (
-          player === playerOne &&
-          playerOne.gameBoard.notAttacked(i, j) === true
-        ) {
-          playerOneAttack(i, j);
-          if (typeof playerOne.gameBoard.board[i][j] === "object") {
-            cell.classList.add("hit-cells");
-          } else {
-            cell.classList.add("miss-cells");
+export class GUI {
+  constructor(boardSize, gameMode) {
+    this.game = new Game(boardSize, gameMode);
+    this.startRestartButton = document.querySelector(
+      "button#start-restart-game"
+    );
+    this.infoDisplay = document.querySelector("div#info-display");
+    this.boardOne = document.querySelector("div#board-one");
+    this.boardTwo = document.querySelector("div#board-two");
+  }
+  initiate() {
+    this.startRestartButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      this.game.initiateGame();
+      this.createBoardOneCells();
+      this.createBoardTwoCells();
+      this.updateBoards();
+    });
+  }
+  boardOneCells = [];
+  boardTwoCells = [];
+  createBoardOneCells() {
+    for (let i = 0; i < this.game.playerOne.gameBoard.board.length; i++) {
+      for (let j = 0; j < this.game.playerOne.gameBoard.board[i].length; j++) {
+        const cell = document.createElement("div");
+        cell.classList.add("board-cells");
+        this.boardOneCells.push({
+          coordinates: [i, j],
+          node: cell,
+        });
+        cell.addEventListener("click", () => {
+          this.game.playerOneAttack(i, j);
+          if (this.game.gameMode === "1-Player") {
+            this.game.playerTwoAttack();
           }
-        } else if (
-          player === computerPlayer &&
-          computerPlayer.gameBoard.notAttacked(i, j) === true
-        ) {
-          computerPlayerAttack();
-          if (typeof computerPlayer.gameBoard.board[i][j] === "object") {
-            cell.classList.add("hit-cells");
-          } else {
-            cell.classList.add("miss-cells");
-          }
-        }
-      });
-      guiBoard.appendChild(cell);
+          this.updateBoards();
+        });
+      }
     }
   }
-}
-
-function updateCellOnAttack(cell, correspondingBoardItem) {
-  if (typeof correspondingBoardItem === "object") {
-    if (correspondingBoardItem.isHit === true) cell.classList.add("");
+  createBoardTwoCells() {
+    for (let i = 0; i < this.game.playerTwo.gameBoard.board.length; i++) {
+      for (let j = 0; j < this.game.playerTwo.gameBoard.board[i].length; j++) {
+        const cell = document.createElement("div");
+        cell.classList.add("board-cells");
+        this.boardTwoCells.push({
+          coordinates: [i, j],
+          node: cell,
+        });
+        cell.addEventListener("click", () => {
+          this.game.playerTwoAttack(i, j);
+          this.updateBoards();
+        });
+      }
+    }
+  }
+  boardUpdate(cellsArray) {
+    let player;
+    let board;
+    if (cellsArray === this.boardOneCells) {
+      player = this.game.playerOne;
+      board = this.boardOne;
+    } else if (cellsArray === this.boardTwoCells) {
+      player = this.game.playerTwo;
+      board = this.boardTwo;
+    }
+    board.textContent = "";
+    for (let i = 0; i < cellsArray.length; i++) {
+      const x = cellsArray[i].coordinates[0];
+      const y = cellsArray[i].coordinates[1];
+      if (player.gameBoard.checkHitStatus(x, y) === true) {
+        if (player.gameBoard.getShipObject(x, y) === null) {
+          cellsArray[i].node.classList.add("board-cells-miss");
+        } else {
+          cellsArray[i].node.classList.add("board-cells-hit");
+        }
+      }
+      board.appendChild(cellsArray[i].node);
+    }
+  }
+  updateBoards() {
+    this.boardUpdate(this.boardOneCells);
+    this.boardUpdate(this.boardTwoCells);
   }
 }

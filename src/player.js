@@ -1,9 +1,9 @@
 import { GameBoard } from "./game-board.js";
 
 export class Player {
-    constructor(playerName){
+    constructor(boardSize, playerName){
         this.playerName = playerName;
-        this.gameBoard = new GameBoard(10);
+        this.gameBoard = new GameBoard(boardSize);
     }
     opponent = null;
     setOpponent(opponentPlayer){
