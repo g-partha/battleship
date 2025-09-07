@@ -66,7 +66,7 @@ export class GUI {
     for (let i = 0; i < cellsArray.length; i++) {
       const x = cellsArray[i].coordinates[0];
       const y = cellsArray[i].coordinates[1];
-      if (player.gameBoard.checkHitStatus(x, y) === true) {
+      if (player.gameBoard.getHitStatus(x, y) === true) {
         if (player.gameBoard.getShipObject(x, y) === null) {
           cellsArray[i].node.classList.add("board-cells-miss");
         } else {

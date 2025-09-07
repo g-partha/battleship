@@ -1,34 +1,33 @@
 import { Ship } from "./ship.js";
 
 export class GameBoard {
-  numberOfShipsLengthFive = 0;
-  numberOfShipsLengthFour = 0;
-  numberOfShipsLengthThree = 0;
-  numberOfShipsLengthTwo = 0;
-  shipsAdded = [];
   constructor(size) {
     this.size = size;
     this.board = [];
-    for (let i = 0; i < size; i++) {
-      this.board.push([]);
-      for (let j = 0; j < size; j++) {
-        this.board[i].push({ isHit: false, shipObject: null });
-      }
-    }
+    this.shipTypes = {
+      carrier: { length: 5, count: 1, countAdded: 0 },
+      battleship: { length: 4, count: 1, countAdded: 0 },
+      cruiserAndSubmarine: { length: 3, count: 2, countAdded: 0 },
+      destroyer: { length: 2, count: 1, countAdded: 0 },
+    };
+    this.shipsAdded = [];
+    this._allShipsSunk = false;
+    this._shipsSunkCount = 0;
   }
-  resetBoard() {
+  initiateBoard() {
+    for (const shipType in this.shipTypes) {
+      this.shipTypes[shipType].countAdded = 0;
+    }
+    this.shipsAdded = [];
     this.board = [];
+    this._allShipsSunk = false;
+    this._shipsSunkCount = 0;
     for (let i = 0; i < this.size; i++) {
       this.board.push([]);
       for (let j = 0; j < this.size; j++) {
         this.board[i].push({ isHit: false, shipObject: null });
       }
     }
-    numberOfShipsLengthFive = 0;
-    numberOfShipsLengthFour = 0;
-    numberOfShipsLengthThree = 0;
-    numberOfShipsLengthTwo = 0;
-    shipsAdded = [];
   }
   getCell(x, y) {
     return this.board[x][y];
@@ -39,7 +38,7 @@ export class GameBoard {
   setShipObject(x, y, value) {
     this.board[x][y].shipObject = value;
   }
-  checkHitStatus(x, y) {
+  getHitStatus(x, y) {
     return this.board[x][y].isHit;
   }
   setHitStatusAsTrue(x, y) {
@@ -50,21 +49,17 @@ export class GameBoard {
     startCoordinateValue,
     directionValue
   ) {
-    const validLength = [2, 3, 4, 5];
+    const validLength = Object.values(this.shipTypes).map(
+      (ship) => ship.length
+    );
     if (!validLength.includes(lengthValue)) return false;
-    switch (lengthValue) {
-      case 5:
-        if (this.numberOfShipsLengthFive >= 1) return false;
-        break;
-      case 4:
-        if (this.numberOfShipsLengthFour >= 1) return false;
-        break;
-      case 3:
-        if (this.numberOfShipsLengthThree >= 2) return false;
-        break;
-      case 2:
-        if (this.numberOfShipsLengthTwo >= 1) return false;
-        break;
+    for (const shipType in this.shipTypes) {
+      if (this.shipTypes[shipType].length === lengthValue) {
+        if (
+          this.shipTypes[shipType].countAdded >= this.shipTypes[shipType].count
+        )
+          return false;
+      }
     }
     let x = startCoordinateValue[0];
     let y = startCoordinateValue[1];
@@ -72,7 +67,7 @@ export class GameBoard {
       for (let i = 0; i < lengthValue; i++) {
         if (x < 0 || x > this.size - 1 || y < 0 || y > this.size - 1)
           return false; // Check for out of range coordinates
-        if (this.getShipObject(x, y) !== null) return false; // Check for operlapping ships
+        if (this.getShipObject(x, y) !== null) return false; // Check for overlapping ships
         x++;
       }
     }
@@ -91,11 +86,22 @@ export class GameBoard {
       this.validInputForShipPlacement(length, startCoordinate, direction) ===
       false
     )
-      return -1;
+      return false;
     let x = startCoordinate[0];
     let y = startCoordinate[1];
     const ship = new Ship(length);
     this.shipsAdded.push(ship);
+    // Listen for ship sunk event
+    ship._wasSunk = false;
+    ship._onSunk = () => {
+      if (!ship._wasSunk) {
+        ship._wasSunk = true;
+        this._shipsSunkCount++;
+        if (this._shipsSunkCount === this.shipsAdded.length) {
+          this._allShipsSunk = true;
+        }
+      }
+    };
     if (direction === "horizontal") {
       for (let i = 0; i < length; i++) {
         this.setShipObject(x, y, ship);
@@ -107,21 +113,12 @@ export class GameBoard {
         y++;
       }
     }
-    switch (length) {
-      case 5:
-        this.numberOfShipsLengthFive++;
-        break;
-      case 4:
-        this.numberOfShipsLengthFour++;
-        break;
-      case 3:
-        this.numberOfShipsLengthThree++;
-        break;
-      case 2:
-        this.numberOfShipsLengthTwo++;
-        break;
+    for (const shipType in this.shipTypes) {
+      if (this.shipTypes[shipType].length === length) {
+        this.shipTypes[shipType].countAdded++;
+      }
     }
-    return 1;
+    return true;
   }
   receiveAttack(x, y) {
     if (this.checkHitStatus(x, y) === true) return -1;
@@ -130,20 +127,21 @@ export class GameBoard {
       return 1;
     } else {
       this.setHitStatusAsTrue(x, y);
-      this.getShipObject(x, y).hit();
+      const ship = this.getShipObject(x, y);
+      ship.hit();
+      if (ship.isSunk() && typeof ship._onSunk === "function") {
+        ship._onSunk();
+      }
       return 1;
     }
   }
   allShipsSunk() {
-    for (let i = 0; i < this.shipsAdded.length; i++) {
-      if (this.shipsAdded[i].isSunk() === false) return false;
-    }
-    return true;
+    return this._allShipsSunk;
   }
-  randomIntegerLessThan(limitigInteger) {
-    return Math.floor(limitigInteger * Math.random());
+  randomIntegerLessThan(limitingInteger) {
+    return Math.floor(limitingInteger * Math.random());
   }
-  validRandomCoordinateforPlacement(length, direction) {
+  validRandomCoordinateForPlacement(length, direction) {
     let count = 0;
     while (count < 1000) {
       const x = this.randomIntegerLessThan(this.size);
@@ -153,34 +151,52 @@ export class GameBoard {
       }
       count++;
     }
+    // Explicitly return null if no valid coordinate is found
+    return null;
   }
   randomDirection() {
     const directions = ["horizontal", "vertical"];
     return directions[Math.floor(Math.random() * directions.length)];
   }
   populateBoard() {
-    let lengths = [5, 4, 3, 3, 2];
+    let lengths = [];
+    Object.values(this.shipTypes).forEach((ship) => {
+      for (let i = 0; i < ship.count; i++) {
+        lengths.push(ship.length);
+      }
+    });
     for (let i = 0; i < lengths.length; i++) {
       let randomDirection = this.randomDirection();
-      let randomCoordinates = this.validRandomCoordinateforPlacement(
+      let randomCoordinates = this.validRandomCoordinateForPlacement(
         lengths[i],
         randomDirection
       );
-      this.addShip(lengths[i], randomCoordinates, randomDirection);
+      if (randomCoordinates !== null && randomCoordinates !== undefined) {
+        this.addShip(lengths[i], randomCoordinates, randomDirection);
+      } else {
+        // Optionally, handle the error (e.g., throw, log, or break)
+        console.warn(
+          `Could not find valid coordinates for ship of length ${lengths[i]}`
+        );
+      }
     }
   }
-  validRandomCoordinateforAttack() {
+  // Add validRandomCoordinateForAttack method if missing
+  validRandomCoordinateForAttack() {
     let count = 0;
     while (count < 1000) {
       const x = this.randomIntegerLessThan(this.size);
       const y = this.randomIntegerLessThan(this.size);
-      if (this.checkHitStatus(x, y) === false) return [x, y];
+      if (!this.checkHitStatus(x, y)) {
+        return [x, y];
+      }
       count++;
     }
+    return null;
   }
   autoAttack() {
-    const randomCoordinates = this.validRandomCoordinateforAttack();
-    if (randomCoordinates === undefined) return;
+    const randomCoordinates = this.validRandomCoordinateForAttack();
+    if (!randomCoordinates) return;
     this.receiveAttack(randomCoordinates[0], randomCoordinates[1]);
   }
 }

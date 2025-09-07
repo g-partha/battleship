@@ -2,6 +2,7 @@ import { GameBoard } from "./game-board.js";
 let gameBoardOne;
 beforeEach(() => {
   gameBoardOne = new GameBoard(10);
+  gameBoardOne.initiateBoard();
 });
 
 describe("addShip", () => {
@@ -48,12 +49,12 @@ describe("receiveAttack", () => {
   test("Missed attack", () => {
     gameBoardOne.receiveAttack(1, 3);
     expect(gameBoardOne.getShipObject(1, 3)).toBe(null);
-    expect(gameBoardOne.checkHitStatus(1, 3)).toBe(true);
+    expect(gameBoardOne.getHitStatus(1, 3)).toBe(true);
   });
   test("Hit attack", () => {
     gameBoardOne.addShip(4, [2, 2], "horizontal");
     gameBoardOne.receiveAttack(2, 2);
-    expect(gameBoardOne.checkHitStatus(2, 2)).toBe(true);
+    expect(gameBoardOne.getHitStatus(2, 2)).toBe(true);
   });
 });
 
@@ -99,7 +100,7 @@ test("populateBoard", () => {
   expect(gameBoardOne.shipsAdded.length).toBe(5);
 });
 
-describe("validRandomCoordinateforAttack", () => {
+describe("validRandomCoordinateForAttack", () => {
   test("All ships are attacked", () => {
     gameBoardOne.populateBoard();
     for (let i = 0; i <= 9; i++) {
@@ -108,9 +109,9 @@ describe("validRandomCoordinateforAttack", () => {
         gameBoardOne.receiveAttack(i, j);
       }
     }
-    const randomCoordinate = gameBoardOne.validRandomCoordinateforAttack();
+    const randomCoordinate = gameBoardOne.validRandomCoordinateForAttack();
     // After attacking every cell, this function should return undefined (no valid attack left)
-    expect(randomCoordinate).toBeUndefined(); // You might want to handle this case explicitly in your method
+    expect(randomCoordinate).toBe(null); // You might want to handle this case explicitly in your method
   });
 
   test("Some ships are attacked", () => {
@@ -120,11 +121,11 @@ describe("validRandomCoordinateforAttack", () => {
         gameBoardOne.receiveAttack(i, j);
       }
     }
-    const randomCoordinate = gameBoardOne.validRandomCoordinateforAttack();
+    const randomCoordinate = gameBoardOne.validRandomCoordinateForAttack();
     const x = randomCoordinate[0];
     const y = randomCoordinate[1];
     if (typeof gameBoardOne.getCell(x, y) === "object") {
-      expect(gameBoardOne.checkHitStatus(x, y)).toBe(false);
+      expect(gameBoardOne.getHitStatus(x, y)).toBe(false);
     } else {
       expect(gameBoardOne.getCell(x, y)).not.toBe("miss");
     }
@@ -137,9 +138,9 @@ describe("autoAttack", () => {
     for (let i = 0; i <= 99; i++) {
       gameBoardOne.autoAttack();
     }
-    const randomCoordinate = gameBoardOne.validRandomCoordinateforAttack();
+    const randomCoordinate = gameBoardOne.validRandomCoordinateForAttack();
     // After attacking every cell, this function should return undefined (no valid attack left)
-    expect(randomCoordinate).toBeUndefined(); // You might want to handle this case explicitly in your method
+    expect(randomCoordinate).toBe(null); // You might want to handle this case explicitly in your method
   });
 });
 
@@ -148,5 +149,7 @@ describe("randomIntegerLessThan", () => {
     const randomInt = gameBoardOne.randomIntegerLessThan(10);
     console.log(randomInt);
     expect(randomInt).toBeLessThan(10);
+    expect(randomInt).toBeGreaterThanOrEqual(0);
+    expect(Number.isInteger(randomInt)).toBe(true);
   });
 });
