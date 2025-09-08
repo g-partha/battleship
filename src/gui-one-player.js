@@ -1,4 +1,4 @@
-import { Game } from "./play-game.js";
+import { Game } from "./play-game-one-player.js";
 
 export class GUI {
   constructor(boardSize, gameMode) {

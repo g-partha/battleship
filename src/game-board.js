@@ -30,6 +30,9 @@ export class GameBoard {
     }
   }
   getCell(x, y) {
+    if (x < 0 || x >= this.size || y < 0 || y >= this.size) {
+      return null;
+    }
     return this.board[x][y];
   }
   getShipObject(x, y) {
@@ -49,10 +52,10 @@ export class GameBoard {
     startCoordinateValue,
     directionValue
   ) {
-    const validLength = Object.values(this.shipTypes).map(
+    const validLengths = Object.values(this.shipTypes).map(
       (ship) => ship.length
     );
-    if (!validLength.includes(lengthValue)) return false;
+    if (!validLengths.includes(lengthValue)) return false;
     for (const shipType in this.shipTypes) {
       if (this.shipTypes[shipType].length === lengthValue) {
         if (
@@ -121,7 +124,7 @@ export class GameBoard {
     return true;
   }
   receiveAttack(x, y) {
-    if (this.checkHitStatus(x, y) === true) return -1;
+    if (this.getHitStatus(x, y) === true) return -1;
     if (this.getShipObject(x, y) === null) {
       this.setHitStatusAsTrue(x, y);
       return 1;
@@ -187,7 +190,7 @@ export class GameBoard {
     while (count < 1000) {
       const x = this.randomIntegerLessThan(this.size);
       const y = this.randomIntegerLessThan(this.size);
-      if (!this.checkHitStatus(x, y)) {
+      if (!this.getHitStatus(x, y)) {
         return [x, y];
       }
       count++;

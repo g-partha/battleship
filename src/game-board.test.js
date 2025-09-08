@@ -124,11 +124,7 @@ describe("validRandomCoordinateForAttack", () => {
     const randomCoordinate = gameBoardOne.validRandomCoordinateForAttack();
     const x = randomCoordinate[0];
     const y = randomCoordinate[1];
-    if (typeof gameBoardOne.getCell(x, y) === "object") {
-      expect(gameBoardOne.getHitStatus(x, y)).toBe(false);
-    } else {
-      expect(gameBoardOne.getCell(x, y)).not.toBe("miss");
-    }
+    expect(gameBoardOne.getHitStatus(x, y)).toBe(false);
   });
 });
 
