@@ -143,7 +143,6 @@ describe("autoAttack", () => {
 describe("randomIntegerLessThan", () => {
   test("simple test", () => {
     const randomInt = gameBoardOne.randomIntegerLessThan(10);
-    console.log(randomInt);
     expect(randomInt).toBeLessThan(10);
     expect(randomInt).toBeGreaterThanOrEqual(0);
     expect(Number.isInteger(randomInt)).toBe(true);
