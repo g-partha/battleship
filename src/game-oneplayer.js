@@ -1,7 +1,6 @@
 import { Player } from "./player.js";
 
 export class Game {
-  currentPlayer = null;
   constructor(boardSize) {
     this.playerOne = new Player(boardSize, "Player One");
     this.computerPlayer = new Player(boardSize, "Computer");
@@ -9,12 +8,11 @@ export class Game {
   initiateGame() {
     this.playerOne.setOpponent(this.computerPlayer);
     this.computerPlayer.setOpponent(this.playerOne);
-    this.playerOne.gameBoard.resetBoard();
-    this.computerPlayer.gameBoard.resetBoard();
+    this.playerOne.gameBoard.initiateBoard();
+    this.computerPlayer.gameBoard.initiateBoard();
     this.playerOne.gameBoard.populateBoard();
     this.computerPlayer.gameBoard.populateBoard();
-    this.currentPlayer = this.firstPlayer();
-    console.log(this.currentPlayer.playerName + " 's turn!");
+    if (this.firstPlayer() === this.computerPlayer) this.computerPlayerAttack();
     return 1;
   }
   firstPlayer() {
@@ -22,24 +20,26 @@ export class Game {
     return players[Math.floor(Math.random() * players.length)];
   }
   playerOneAttack(x, y) {
-    if (
-      this.currentPlayer !== this.playerOne ||
-      this.playerOne.opponent.gameBoard.getHitStatus(x, y) === true
-    )
-      return -1;
+    if (this.playerOne.opponent.gameBoard.getHitStatus(x, y) === true)
+      return { status: "repeat" };
     this.playerOne.opponent.gameBoard.receiveAttack(x, y);
-    this.currentPlayer = this.playerOne.opponent;
     if (this.playerOne.opponent.gameBoard.allShipsSunk() === true) {
-      console.log(this.playerOne.playerName + " wins!");
       this.initiateGame();
+      return { status: "win", winner: this.playerOne.playerName };
     }
-    this.computerPlayerAttack();
-    return 1;
+    const result = this.computerPlayerAttack();
+    if (result.status === "win") {
+      this.initiateGame();
+      return { status: "win", winner: this.computerPlayer.playerName };
+    }
+    return { status: "continue" };
   }
   computerPlayerAttack() {
-    if (this.currentPlayer !== this.computerPlayer) return -1;
     this.computerPlayer.opponent.gameBoard.autoAttack();
-    this.currentPlayer = this.computerPlayer.opponent;
-    return 1;
+    if (this.computerPlayer.opponent.gameBoard.allShipsSunk() === true) {
+      this.initiateGame();
+      return { status: "win", winner: this.computerPlayer.playerName };
+    }
+    return { status: "continue" };
   }
 }
