@@ -1,4 +1,4 @@
-import { GUI } from "./gui-one-player.js";
+import { GUI } from "./gui-oneplayer.js";
 
-const gui = new GUI(10, '1-Player');
+const gui = new GUI(10);
 gui.initiate();
