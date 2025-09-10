@@ -2,7 +2,8 @@ import { Game } from "./game-oneplayer.js";
 
 export class GUI {
   constructor(boardSize) {
-    this.game = new Game(boardSize);
+    this.boardSize = boardSize;
+    this.game = new Game(this.boardSize);
     this.startRestartButton = document.querySelector(
       "button#start-restart-game"
     );
@@ -15,13 +16,13 @@ export class GUI {
     this.boardTwoCells = [];
   }
   initiate() {
-    this.setupGridStyles();
     this.startRestartButton.addEventListener("click", (event) => {
       event.preventDefault();
       this.game.initiateGame();
       this.clearBoards();
       this.createBoardOneCells();
       this.createBoardTwoCells();
+      this.setupGridStyles();
       this.updateBoards();
       this.infoDisplay.textContent = "Game Started";
       this.infoDisplay.hidden = false;
@@ -42,20 +43,22 @@ export class GUI {
   }
 
   setupGridStyles() {
+    const boardSize = this.boardSize;
     this.boardOne.style.display = "grid";
     this.boardOne.style.gap = "2px";
     this.boardOne.style.justifyContent = "center";
-
+    this.boardOne.style.gridTemplateColumns = `repeat(${boardSize}, auto)`;
+    this.boardOne.style.gridTemplateRows = `repeat(${boardSize}, auto)`;
     this.boardTwo.style.display = "grid";
     this.boardTwo.style.gap = "2px";
     this.boardTwo.style.justifyContent = "center";
+    this.boardTwo.style.gridTemplateColumns = `repeat(${boardSize}, auto)`;
+    this.boardTwo.style.gridTemplateRows = `repeat(${boardSize}, auto)`;
   }
 
   createBoardOneCells() {
-    const boardSize = this.game.playerOne.gameBoard.board.length;
-    this.boardOne.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
-    this.boardOne.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
-    
+    const boardSize = this.boardSize;
+
     for (let i = 0; i < boardSize; i++) {
       for (let j = 0; j < boardSize; j++) {
         const cell = document.createElement("div");
@@ -68,10 +71,8 @@ export class GUI {
     }
   }
   createBoardTwoCells() {
-    const boardSize = this.game.computerPlayer.gameBoard.board.length;
-    this.boardTwo.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
-    this.boardTwo.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
-    
+    const boardSize = this.boardSize;
+
     for (let i = 0; i < boardSize; i++) {
       for (let j = 0; j < boardSize; j++) {
         const cell = document.createElement("div");
@@ -81,6 +82,8 @@ export class GUI {
           node: cell,
         });
         cell.addEventListener("click", () => {
+          this.infoDisplay.textContent = "";
+          this.infoDisplay.hidden = true;
           const result = this.game.playerOneAttack(i, j);
           this.updateBoards();
 
@@ -89,6 +92,7 @@ export class GUI {
             this.infoDisplay.textContent = `${result.winner} wins!`;
           } else if (result.status === "repeat") {
             this.infoDisplay.textContent = "Already attacked this position!";
+            this.infoDisplay.hidden = false;
           }
         });
       }
