@@ -71,6 +71,30 @@ export class GameBoard {
         if (x < 0 || x > this.size - 1 || y < 0 || y > this.size - 1)
           return false; // Check for out of range coordinates
         if (this.getShipObject(x, y) !== null) return false; // Check for overlapping ships
+        if (x + 1 > 0 && x + 1 < this.size) {
+          if (this.getShipObject(x + 1, y) !== null) return false; // Check for adjacent ships
+        }
+        if (x - 1 > 0 && x - 1 < this.size) {
+          if (this.getShipObject(x - 1, y) !== null) return false; // Check for adjacent ships
+        }
+        if (y + 1 > 0 && y + 1 < this.size) {
+          if (this.getShipObject(x, y + 1) !== null) return false; // Check for adjacent ships
+        }
+        if (y - 1 > 0 && y - 1 < this.size) {
+          if (this.getShipObject(x, y - 1) !== null) return false; // Check for adjacent ships
+        }
+        if (x + 1 > 0 && x + 1 < this.size && y + 1 > 0 && y + 1 < this.size) {
+          if (this.getShipObject(x + 1, y + 1) !== null) return false; // Check for adjacent ships
+        }
+        if (x + 1 > 0 && x + 1 < this.size && y - 1 > 0 && y - 1 < this.size) {
+          if (this.getShipObject(x + 1, y - 1) !== null) return false; // Check for adjacent ships
+        }
+        if (x - 1 > 0 && x - 1 < this.size && y + 1 > 0 && y + 1 < this.size) {
+          if (this.getShipObject(x - 1, y + 1) !== null) return false; // Check for adjacent ships
+        }
+        if (x - 1 > 0 && x - 1 < this.size && y - 1 > 0 && y - 1 < this.size) {
+          if (this.getShipObject(x - 1, y - 1) !== null) return false; // Check for adjacent ships
+        }
         x++;
       }
     }
@@ -79,6 +103,30 @@ export class GameBoard {
         if (x < 0 || x > this.size - 1 || y < 0 || y > this.size - 1)
           return false; // Check for out of range coordinates
         if (this.getShipObject(x, y) !== null) return false;
+        if (x + 1 > 0 && x + 1 < this.size) {
+          if (this.getShipObject(x + 1, y) !== null) return false; // Check for adjacent ships
+        }
+        if (x - 1 > 0 && x - 1 < this.size) {
+          if (this.getShipObject(x - 1, y) !== null) return false; // Check for adjacent ships
+        }
+        if (y + 1 > 0 && y + 1 < this.size) {
+          if (this.getShipObject(x, y + 1) !== null) return false; // Check for adjacent ships
+        }
+        if (y - 1 > 0 && y - 1 < this.size) {
+          if (this.getShipObject(x, y - 1) !== null) return false; // Check for adjacent ships
+        }
+        if (x + 1 > 0 && x + 1 < this.size && y + 1 > 0 && y + 1 < this.size) {
+          if (this.getShipObject(x + 1, y + 1) !== null) return false; // Check for adjacent ships
+        }
+        if (x + 1 > 0 && x + 1 < this.size && y - 1 > 0 && y - 1 < this.size) {
+          if (this.getShipObject(x + 1, y - 1) !== null) return false; // Check for adjacent ships
+        }
+        if (x - 1 > 0 && x - 1 < this.size && y + 1 > 0 && y + 1 < this.size) {
+          if (this.getShipObject(x - 1, y + 1) !== null) return false; // Check for adjacent ships
+        }
+        if (x - 1 > 0 && x - 1 < this.size && y - 1 > 0 && y - 1 < this.size) {
+          if (this.getShipObject(x - 1, y - 1) !== null) return false; // Check for adjacent ships
+        }
         y++;
       }
     }
