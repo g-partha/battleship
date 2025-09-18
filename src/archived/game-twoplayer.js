@@ -50,7 +50,7 @@ export class Game {
       this.playerTwo.opponent.gameBoard.getHitStatus(x, y) === true
     )
       return -1;
-    if(this.gameMode === '1-Player'){
+    if (this.gameMode === "1-Player") {
       this.playerTwo.opponent.gameBoard.autoAttack();
       this.currentPlayer = this.playerTwo.opponent;
       return 1;

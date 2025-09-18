@@ -44,14 +44,17 @@ div.boards {
   gap: 5px;
   grid-template-columns: repeat(10, auto);
 }
-div.board-cells{
+div.board-cells {
   width: 30px;
   height: 30px;
   background-color: grey;
 }
-div.board-cells-miss{
+div.board-cells-ship-added{
+  background-color: yellow;
+}
+div.board-cells-miss {
   background-color: red;
 }
-div.board-cells-hit{
-background-color: green;
+div.board-cells-hit {
+  background-color: green;
 }

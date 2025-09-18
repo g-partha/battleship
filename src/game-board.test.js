@@ -10,10 +10,10 @@ describe("addShip", () => {
     gameBoardOne.addShip(3, [2, 3], "horizontal");
     expect(typeof gameBoardOne.getCell(2, 3)).toBe("object");
     expect(gameBoardOne.getShipObject(3, 3)).toBe(
-      gameBoardOne.getShipObject(2, 3)
+      gameBoardOne.getShipObject(2, 3),
     );
     expect(gameBoardOne.getShipObject(4, 3)).toBe(
-      gameBoardOne.getShipObject(2, 3)
+      gameBoardOne.getShipObject(2, 3),
     );
   });
   test("Check for invalid length", () => {
@@ -24,14 +24,14 @@ describe("addShip", () => {
     gameBoardOne.addShip(4, [3, 2], "horizontal");
     gameBoardOne.addShip(2, [3, 2], "vertical");
     expect(gameBoardOne.getShipObject(3, 2)).toBe(
-      gameBoardOne.getShipObject(4, 2)
+      gameBoardOne.getShipObject(4, 2),
     );
   });
   test("Try to overlap ships V2", () => {
     gameBoardOne.addShip(4, [3, 2], "horizontal");
     gameBoardOne.addShip(2, [5, 1], "vertical");
     expect(gameBoardOne.getShipObject(5, 2)).toBe(
-      gameBoardOne.getShipObject(3, 2)
+      gameBoardOne.getShipObject(3, 2),
     );
   });
   test("Try to add ships to coordinates that are outside the range of the board", () => {

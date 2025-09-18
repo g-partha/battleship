@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "format": "npx prettier . --write"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
     "@babel/core": "^7.28.3",
     "@babel/preset-env": "^7.28.3",
     "babel-jest": "^30.0.5",
-    "jest": "^30.0.5"
+    "jest": "^30.0.5",
+    "prettier": "3.6.2"
   }
 }

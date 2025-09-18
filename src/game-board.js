@@ -50,10 +50,10 @@ export class GameBoard {
   validInputForShipPlacement(
     lengthValue,
     startCoordinateValue,
-    directionValue
+    directionValue,
   ) {
     const validLengths = Object.values(this.shipTypes).map(
-      (ship) => ship.length
+      (ship) => ship.length,
     );
     if (!validLengths.includes(lengthValue)) return false;
     for (const shipType in this.shipTypes) {
@@ -95,7 +95,7 @@ export class GameBoard {
         if (x - 1 > 0 && x - 1 < this.size && y - 1 > 0 && y - 1 < this.size) {
           if (this.getShipObject(x - 1, y - 1) !== null) return false; // Check for adjacent ships
         }
-        x++;
+        y++;
       }
     }
     if (directionValue === "vertical") {
@@ -127,7 +127,7 @@ export class GameBoard {
         if (x - 1 > 0 && x - 1 < this.size && y - 1 > 0 && y - 1 < this.size) {
           if (this.getShipObject(x - 1, y - 1) !== null) return false; // Check for adjacent ships
         }
-        y++;
+        x++;
       }
     }
     return true;
@@ -156,12 +156,12 @@ export class GameBoard {
     if (direction === "horizontal") {
       for (let i = 0; i < length; i++) {
         this.setShipObject(x, y, ship);
-        x++;
+        y++;
       }
     } else if (direction === "vertical") {
       for (let i = 0; i < length; i++) {
         this.setShipObject(x, y, ship);
-        y++;
+        x++;
       }
     }
     for (const shipType in this.shipTypes) {
@@ -220,14 +220,14 @@ export class GameBoard {
       let randomDirection = this.randomDirection();
       let randomCoordinates = this.validRandomCoordinateForPlacement(
         lengths[i],
-        randomDirection
+        randomDirection,
       );
       if (randomCoordinates !== null && randomCoordinates !== undefined) {
         this.addShip(lengths[i], randomCoordinates, randomDirection);
       } else {
         // Optionally, handle the error (e.g., throw, log, or break)
         console.warn(
-          `Could not find valid coordinates for ship of length ${lengths[i]}`
+          `Could not find valid coordinates for ship of length ${lengths[i]}`,
         );
       }
     }
